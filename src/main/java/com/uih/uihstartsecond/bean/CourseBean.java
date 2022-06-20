@@ -7,13 +7,18 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudyBean {
-    private String name;
+public class CourseBean {
+
+
+    private Integer id;
+
+    private String podName;
     /**
      * 1: nly look
      * 2: look and do
      *
      * */
     private Integer type;
-    private String gottyUrl;
+
+    private Integer port;
 }
