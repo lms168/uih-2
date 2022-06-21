@@ -71,7 +71,7 @@ public class CourseService {
 
 
     public boolean checkPodStatus(Integer port){
-        return telnet(k8sHost, port, 3000);
+        return telnet(k8sHost, port, 2000);
     }
 
 

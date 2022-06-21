@@ -10,6 +10,7 @@
 <html>
 <head>
     <script src="/js/jquery.min.js"></script>
+    <script src="/js/mask.js"></script>
     <style>
         .header{height:10%; margin:-8px -8px 0px;background-image:linear-gradient(145deg,#7379ff,#b524ef);color:white;text-align:center;padding:10px;}
         .container{width:100%; height:85%;}
@@ -36,7 +37,7 @@
     </div>
     <div class="body">
         <div id="study-content" style="width: 100%; height: 90%">
-            此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111此处显示教材1111111111
+
         </div>
         <div id="study-progress" style="height: 10%; ">
             <a href="#" style="float: left; padding-left: 20px">pre</a>
@@ -56,21 +57,61 @@
 </body>
 <script>
   $(document).ready(function (){
-      $.get("/test/list",function(data){
+
+      $.get("/course/list",function(data){
           // alert("Data Loaded: " + data);
            var html = '';
            $.each(data,function (index,item){
-               html = html + '<li lk="'+item.gottyUrl+'">' + item.name + '</li>';
+               html = html + '<li>' + item + '</li>';
            })
           $("#studyList").append(html);
       });
 
       $("ul").on("click","li",function(){
-          console.log($(this).attr("lk"))
-          $("#tty").attr("src",$(this).attr("lk"));
+
+          $("#tty").attr("src", "");
+          $("#study-content").html("");
+
+          var openId = $.openLoadForm("nzai chushi fsfafdfafaf", function (openId){
+              return openId;
+          })
+
+          var name = $(this).text();
+
+          $.ajax({
+              type: "GET",
+              url: "/course",
+              data: "name="+name,
+              success: function (msg){
+                  checkPort(msg.port, msg.podName, openId)
+              }
+          })
+
+
       });
 
-
+      function checkPort(port, podName,openId){
+          console.log("port="+port+"\t\t podName="+podName)
+          var num = 0;
+          var time = function (){
+              num = num + 1;
+              $.getJSON("/course/check?port="+port, function (status){
+                  if (status|| num == 30){
+                      clearInterval(timer)
+                      $.closeLoadForm(openId);
+                      var src = ""
+                      var studyContent = ""
+                      if (status){
+                          src = "http://192.168.49.1:8080/?arg="+podName+"&arg=/bin/bash";
+                          studyContent = "Hello <b>"+podName+"</b>!";
+                      }
+                      $("#tty").attr("src", src);
+                      $("#study-content").html(studyContent);
+                  }
+              })
+          }
+          var timer = setInterval(time, 10000)
+      }
   });
 </script>
 </html>

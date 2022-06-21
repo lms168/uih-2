@@ -4,14 +4,11 @@ import com.uih.uihstartsecond.bean.CourseBean;
 import com.uih.uihstartsecond.service.CourseService;
 import io.kubernetes.client.openapi.models.V1Pod;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,10 +21,14 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
+    @GetMapping("index")
+    public String index(){
+        return "index";
+    }
 
     @GetMapping("/list")
     @ResponseBody
-    public List<String> queryAllStudy(){
+    public List<String> queryAll(){
         return courseService.queryCourse();
     }
 
